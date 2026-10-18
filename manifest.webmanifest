@@ -1,7 +1,7 @@
 {
- "name": "Zishan’s Car Monitor",
- "short_name": "Car Monitor",
- "description": "Fuel, mileage and engine oil tracker",
+ "name": "VehiclePulse",
+ "short_name": "VehiclePulse",
+ "description": "Fuel, mileage, engine oil and car info tracker",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
