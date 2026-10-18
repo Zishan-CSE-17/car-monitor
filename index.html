@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1877f2">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="application-name" content="Car Monitor">
+<meta name="apple-mobile-web-app-title" content="Car Monitor">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Zishan’s Car Monitor</title>
+<style>
+:root{--bg1:#f0f2f5;--bg2:#f0f2f5;--tx:#050505;--mut:#65676b;--card:#ffffff;--bd:#ced0d4;--in:#f0f2f5;--ok:#42b72a;--warn:#e09f00;--bad:#fa383e;--a1:#1877f2;--a2:#1877f2;--dg:#1c1e21;--sh:0 1px 2px rgba(0,0,0,.2);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#18191a;--bg2:#18191a;--tx:#e4e6eb;--mut:#b0b3b8;--card:#242526;--bd:#3e4042;--in:#3a3b3c;--ok:#45bd62;--warn:#f7b928;--bad:#ff5a5f;--a1:#2d88ff;--a2:#2d88ff;--dg:#3a3b3c;--sh:0 1px 2px rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#18191a;--bg2:#18191a;--tx:#e4e6eb;--mut:#b0b3b8;--card:#242526;--bd:#3e4042;--in:#3a3b3c;--ok:#45bd62;--warn:#f7b928;--bad:#ff5a5f;--a1:#2d88ff;--a2:#2d88ff;--dg:#3a3b3c;--sh:0 1px 2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font:400 16px/1.45 Figtree,system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--tx);background:var(--bg1)}
+main{max-width:520px;margin:0 auto;padding:16px 16px 130px}
+h1,h2,.num{font-family:Unbounded,Figtree,system-ui,sans-serif}
+h1{font-size:24px;margin:0;letter-spacing:-.04em;color:var(--a1)}h2{font-size:15px;margin:0 0 12px;font-weight:500}
+.top{display:flex;justify-content:space-between;align-items:center;padding:6px 2px}
+.chip{font-size:13px;font-weight:600;padding:6px 12px;border-radius:99px;background:var(--card);border:1px solid var(--bd)}button.chip{font:600 13px Figtree,sans-serif;color:var(--tx);cursor:pointer;max-width:50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.car{display:flex;width:100%;justify-content:space-between;align-items:center;text-align:left;color:var(--tx);font:inherit;cursor:pointer}.dot{width:14px;height:14px;border-radius:50%;flex:none;box-shadow:0 0 10px rgba(255,255,255,.35)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--sh);padding:18px;margin:14px 0}
+.mut{color:var(--mut);font-size:14px}
+.odo{display:flex;gap:6px;align-items:center}.odo i{font:700 clamp(28px,9vw,40px)/1 Unbounded,sans-serif;font-style:normal;color:#fff;background:linear-gradient(180deg,#4a4c4f,var(--dg) 55%,#4a4c4f);border-radius:10px;padding:12px 0;width:15.5%;text-align:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 6px 14px rgba(0,0,0,.25)}
+.odo span{font-weight:700;margin-left:4px}
+.gz{position:relative;width:min(260px,76vw);margin:4px auto 0}.gz svg{display:block;width:100%;overflow:visible}
+.gz circle{fill:none;stroke-width:12}.gz .tk{stroke:var(--mut);stroke-width:5;opacity:.35}
+.gz .pg{stroke:var(--st);stroke-linecap:round;transition:stroke-dasharray 1.3s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 7px var(--st))}
+.gz.ok{--st:var(--ok)}.gz.warn{--st:var(--warn)}.gz.bad{--st:var(--bad)}.gz.bad .pg{animation:pl 1.6s ease-in-out infinite}
+@keyframes pl{50%{filter:drop-shadow(0 0 16px var(--st))}}
+.gc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.gc strong{font:700 clamp(30px,10vw,42px)/1.1 Unbounded,sans-serif;color:var(--st)}.gc span{font-size:13px;color:var(--mut)}
+.st{text-align:center;font-weight:700;margin-top:10px;color:var(--st)}.st small{display:block;font-weight:400;color:var(--mut);font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid .card{margin:0}
+.big{font:700 24px/1.1 Unbounded,sans-serif;margin-top:4px}.big small{font:500 13px Figtree,sans-serif;color:var(--mut)}
+.bars{display:flex;align-items:flex-end;gap:5px;height:90px}.bars b{flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,var(--a1),var(--a2));opacity:.55;min-height:4px}.bars b:last-child{opacity:1}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--bd)}.row:first-of-type{border-top:0}
+.row .n{font-weight:700}.pill{font:700 13px Figtree;padding:4px 10px;border-radius:99px;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;white-space:nowrap}
+.x{background:none;border:0;color:var(--mut);font:600 13px Figtree;padding:8px;cursor:pointer}
+.btn{width:100%;border:0;border-radius:8px;padding:14px;font:700 16px sans-serif;color:#fff;background:var(--a1);cursor:pointer}
+.btn.alt{background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:none;margin-top:10px}
+label{display:block;font-size:14px;font-weight:600;color:var(--mut);margin:0 0 12px}
+input,textarea{display:block;width:100%;margin-top:6px;padding:14px;font:600 18px Figtree,sans-serif;color:var(--tx);background:var(--in);border:1px solid var(--bd);border-radius:14px}
+input:focus,textarea:focus{outline:2px solid var(--a1);outline-offset:1px}textarea{font-size:12px;height:90px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pv{background:rgba(24,119,242,.12);border-radius:16px;padding:14px;margin:4px 0 16px;font-weight:600}
+.v{display:none}.v.on{display:block}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:calc(100% - 24px);max-width:496px;display:flex;gap:4px;padding:8px 8px calc(env(safe-area-inset-bottom,0px) + 10px);background:var(--card);border:1px solid var(--bd);border-radius:26px 26px 0 0;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:var(--sh);z-index:5}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:var(--mut);font:600 12px Figtree;padding:8px 0;border-radius:16px;cursor:pointer}
+nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--a1)}nav .add{color:#fff;background:linear-gradient(135deg,var(--a1),var(--a2));box-shadow:none}nav .add.on{color:#fff}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tiles div{text-align:center;padding:16px 4px;border-radius:18px;background:var(--dg);color:#fff}.tiles b{display:block;font:700 26px Unbounded,sans-serif}.tiles span{font-size:13px;opacity:.7}
+#toast{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;transform:translate(-50%,-90px);transition:transform .35s;background:var(--dg);color:#fff;padding:12px 20px;border-radius:99px;font-weight:700;z-index:9;box-shadow:var(--sh)}#toast.show{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<main>
+<div class="top"><h1>Zishan’s Car Monitor</h1><button class="chip" id="car" data-go="garage" style="display:none"></button></div>
+<section class="v on" id="v-garage"></section>
+<section class="v" id="v-home"></section>
+<section class="v" id="v-oil"></section>
+<section class="v" id="v-add"></section>
+<section class="v" id="v-age"></section>
+</main>
+<nav>
+<button data-go="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+<button data-go="oil"><svg viewBox="0 0 24 24"><path d="M12 2s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>Engine oil</button>
+<button data-go="add" class="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Refuel</button>
+<button data-go="age"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Age</button>
+</nav>
+<div id="toast"></div>
+<script>
+const SEED=[["2026-05-17",82760],["2026-05-29",83251,28.52,155],["2026-06-19",83623,26.73,155],["2026-06-30",83985,23.53,155],["2026-07-09",84292,23.12,158],["2026-07-25",84656,29.12,159],["2026-08-03",84872,17.59,162],["2026-08-03",85167,20,162],["2026-08-10",85492,22.49,154],["2026-08-13",85643,9,162],["2026-08-17",86089,24.5,162],["2026-08-23",86436,24.02,154],["2026-08-28",86782,24.16,154],["2026-09-04",87202,26.49,151],["2026-09-14",87555,25.1,151],["2026-09-21",88006,26,151],["2026-10-02",88424,26.18,151],["2026-10-13",88845,26.39,151]];
+const Y=3000,R=3900,L=4000,K="nightdrive.v1",K2="zishan.carmonitor.v1",$=s=>document.querySelector(s);
+let DB,S;try{DB=JSON.parse(localStorage.getItem(K2))}catch(e){}
+if(!DB||!DB.cars){let o=null;try{o=JSON.parse(localStorage.getItem(K))}catch(e){}
+DB={birth:o&&o.birth||"",cars:[{id:"c1",name:"Suzuki Wagon R",since:"2026-05-17",fills:o&&o.fills||SEED.map(([d,m,l,p])=>({d,m,l:l||0,p:p||0})),oil:o&&o.oil||[{d:"2026-09-04",k:87231}]}]}}
+const save=()=>{try{localStorage.setItem(K2,JSON.stringify(DB))}catch(e){}};
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const nf=(x,d=0)=>Number(x).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fd=d=>new Date(d+"T00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2200)}
+function rows(c=S){const f=[...c.fills].sort((a,b)=>a.m-b.m);return f.map((r,i)=>{if(!i)return{...r,ref:r};const p=f[i-1],km=r.m-p.m;return{...r,ref:r,km,kl:r.l?km/r.l:0,cost:r.l*r.p}})}
+function span(a,b){let y=b.getFullYear()-a.getFullYear(),m=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate(),h=b.getHours()-a.getHours(),i=b.getMinutes()-a.getMinutes(),s=b.getSeconds()-a.getSeconds();
+if(s<0){s+=60;i--}if(i<0){i+=60;h--}if(h<0){h+=24;d--}if(d<0){d+=new Date(b.getFullYear(),b.getMonth(),0).getDate();m--}if(m<0){m+=12;y--}return{y,m,d,h,i,s}}
+function gauge(k){const C=2*Math.PI*70,p=Math.max(0,Math.min(1,k/L)),st=k>=R?"bad":k>Y?"warn":"ok";
+const sg=(s,e,c)=>`<circle r="70" cx="90" cy="90" style="stroke:var(--${c})" stroke-dasharray="${(e-s)*C} ${C}" stroke-dashoffset="${-s*C}" opacity=".3"/>`;
+return `<div class="gz ${st}"><svg viewBox="0 0 180 180"><g transform="rotate(-90 90 90)"><circle class="tk" r="84" cx="90" cy="90" stroke-dasharray="1.2 6.16"/>${sg(0,.75,"ok")}${sg(.75,.975,"warn")}${sg(.975,1,"bad")}<circle class="pg" r="70" cx="90" cy="90" stroke-dasharray="0 ${C}" data-p="${p*C} ${C}"/></g></svg><div class="gc"><strong>${nf(k)}</strong><span>km since oil change</span></div></div>
+<div class="st ${st}" style="--st:var(--${st})">${{ok:"Oil is fresh",warn:"Plan your oil change",bad:"Change the oil now"}[st]}<small>${k<=L?nf(L-k)+" km left before the "+nf(L)+" km limit":"Over the limit by "+nf(k-L)+" km"}</small></div>`}
+const info=(c=S)=>{const r=rows(c),last=r[r.length-1],o=[...c.oil].sort((a,b)=>b.k-a.k)[0];return{r,last,o,since:o?last.m-o.k:null}};
+function home(){const{r,last,since}=info(),u=r.slice(1),km=last.m-r[0].m,lt=u.reduce((a,x)=>a+x.l,0),cost=u.reduce((a,x)=>a+x.cost,0),avg=lt?km/lt:0,bars=u.slice(-12),mx=Math.max(...bars.map(x=>x.kl),1);
+const list=[...u].reverse().slice(0,show?99:5).map(x=>`<div class="row"><div><div class="n">${fd(x.d)}</div><div class="mut">+${nf(x.km)} km · ${nf(x.l,2)} L · ${nf(x.p)} 円/L</div></div><div style="text-align:right"><span class="pill">${nf(x.kl,1)} km/L</span><br><button class="x" data-del="${S.fills.indexOf(x.ref)}">${nf(x.cost)} 円 ✕</button></div></div>`).join("");
+const ca=span(new Date(S.since+"T00:00"),new Date());$("#v-home").innerHTML=`<div class="card"><h2>Odometer</h2><div class="odo">${String(last.m).padStart(6,"0").split("").map(d=>`<i>${d}</i>`).join("")}<span>km</span></div><p class="mut" style="margin:12px 0 0">Last fill-up ${fd(last.d)}</p></div>
+<div class="card"><h2>Car age</h2><div class="tiles"><div><b>${ca.y}</b><span>years</span></div><div><b>${ca.m}</b><span>months</span></div><div><b>${ca.d}</b><span>days</span></div></div><p class="mut" style="margin:12px 0 0;text-align:center">Since ${fd(S.since)}</p></div>
+<div class="card">${since==null?'<p class="mut">Add an oil change on the Engine oil tab.</p>':gauge(since)}</div>
+<div class="grid"><div class="card"><span class="mut">Average</span><div class="big">${nf(avg,1)} <small>km/L</small></div></div><div class="card"><span class="mut">Last fill</span><div class="big">${nf(last.kl||0,1)} <small>km/L</small></div></div><div class="card"><span class="mut">Distance</span><div class="big">${nf(km)} <small>km</small></div></div><div class="card"><span class="mut">Spent</span><div class="big">${nf(cost)} <small>円</small></div></div></div>
+<div class="card"><h2>Efficiency, last ${bars.length} fills</h2><div class="bars">${bars.map(x=>`<b title="${nf(x.kl,1)} km/L" style="height:${x.kl/mx*100}%"></b>`).join("")}</div></div>
+<div class="card"><h2>Fuel history</h2>${list}<button class="btn alt" data-more>${show?"Show fewer":"Show all "+u.length}</button></div>
+<div class="card"><h2>Backup</h2><textarea id="bk" aria-label="Backup data">${JSON.stringify(DB)}</textarea><div class="two"><button class="btn alt" data-copy>Copy</button><button class="btn alt" data-restore>Restore</button></div></div>`;
+requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll(".pg").forEach(e=>e.setAttribute("stroke-dasharray",e.dataset.p)),60));}
+function oil(){const{last,o,since}=info(),l=[...S.oil].sort((a,b)=>b.k-a.k);
+$("#v-oil").innerHTML=`<div class="card">${since==null?'<p class="mut">No oil change saved yet.</p>':gauge(since)}</div>
+${o?`<div class="card"><h2>Next oil change</h2><div class="row"><span class="mut">Window opens</span><span class="n">${nf(o.k+Y)} km</span></div><div class="row"><span class="mut">Must be done by</span><span class="n">${nf(o.k+L)} km</span></div><div class="row"><span class="mut">Current meter</span><span class="n">${nf(last.m)} km</span></div><p class="mut">Yellow after ${nf(Y)} km, solid red from ${nf(R)} km.</p></div>`:""}
+<div class="card"><h2>I changed my oil</h2><div class="two"><label>Date<input id="od" type="date" value="${today()}"></label><label>Meter (km)<input id="ok" type="number" inputmode="numeric" value="${last.m}"></label></div><button class="btn" data-oil>Save oil change</button></div>
+<div class="card"><h2>Oil change log</h2>${l.map(x=>`<div class="row"><div><div class="n">${fd(x.d)}</div><div class="mut">${nf(x.k)} km</div></div><button class="x" data-delo="${S.oil.indexOf(x)}">Delete</button></div>`).join("")}</div>`}
+function add(){const{last}=info();$("#v-add").innerHTML=`<div class="card"><h2>New fill-up</h2><label>Date<input id="fd" type="date" value="${today()}"></label><label>Meter (km)<input id="fm" type="number" inputmode="numeric" placeholder="${last.m}"></label><div class="two"><label>Oil (L)<input id="fl" type="number" inputmode="decimal" step="0.01"></label><label>Price (円/L)<input id="fp" type="number" inputmode="decimal" value="${last.p||""}"></label></div><div class="pv" id="pv">Fill in the numbers to preview.</div><button class="btn" data-save>Save fill-up</button></div>`;
+document.querySelectorAll("#v-add input").forEach(i=>i.oninput=pv)}
+function pv(){const{last}=info(),m=+$("#fm").value,l=+$("#fl").value,p=+$("#fp").value;$("#pv").textContent=m>last.m&&l>0?`+${nf(m-last.m)} km · ${nf((m-last.m)/l,1)} km/L`+(p>0?` · ${nf(l*p)} 円`:""):"Fill in the numbers to preview."}
+function age(){const b=DB.birth;$("#v-age").innerHTML=`<div class="card"><h2>Your age</h2><div id="at" class="mut">Pick your birth date and time.</div></div><div class="card"><label>Birth date and time<input id="bi" type="datetime-local" step="1" value="${b}"></label></div>`;$("#bi").onchange=e=>{DB.birth=e.target.value;save();tick()};tick()}
+function tick(){const e=$("#at");if(!e||!DB.birth)return;const b=new Date(DB.birth),n=new Date();if(isNaN(b)||b>n){e.textContent="Pick a birth date in the past.";return}
+const s=span(b,n);e.className="";e.innerHTML=`<div class="tiles">${[["years",s.y],["months",s.m],["days",s.d],["hours",s.h],["minutes",s.i],["seconds",s.s]].map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join("")}</div><p class="mut" style="text-align:center;margin:14px 0 0">${nf(Math.floor((n-b)/864e5))} days alive</p>`}
+function hdr(){const on=S&&view!="garage";$("#car").textContent=on?S.name+" ▾":"";$("#car").style.display=on?"":"none"}
+function garage(){$("#v-garage").innerHTML=`<h2 style="font-size:18px;margin:18px 2px 4px">Choose your car</h2><p class="mut" style="margin:0 2px 8px">${DB.cars.length?"Tap a car to open its data.":"No cars yet. Add your first car."}</p>`+DB.cars.map(c=>{const i=info(c),st=i.since==null?"mut":i.since>=R?"bad":i.since>Y?"warn":"ok";return `<button class="card car" data-pick="${c.id}"><div><div class="n" style="font-size:18px">${esc(c.name)}</div><div class="mut">${nf(i.last.m)} km · last fill ${fd(i.last.d)}</div></div><span class="dot" style="background:var(--${st})"></span></button><div style="text-align:right;margin:-6px 6px 8px"><button class="x" data-rmcar="${c.id}">Remove car</button></div>`}).join("")+`<button class="btn" data-newcar>Add new car</button>`}
+function newcar(){$("#v-garage").innerHTML=`<div class="card"><h2>Add a new car</h2><label>Car name<input id="nn" type="text" placeholder="e.g. Toyota Prius"></label><label>Current meter (km)<input id="nm" type="number" inputmode="numeric"></label><label>Owned or tracked since<input id="ns" type="date" value="${today()}"></label><label>Last engine oil change (km), optional<input id="no" type="number" inputmode="numeric"></label><button class="btn" data-mkcar>Save car</button><button class="btn alt" data-go="garage">Cancel</button></div>`}
+let show=false,view="garage";
+function go(v){view=v;document.querySelectorAll(".v").forEach(e=>e.classList.toggle("on",e.id=="v-"+v));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.go==v));({home,oil,add,age,garage})[v]();$("nav").style.display=v=="garage"?"none":"";hdr();scrollTo(0,0)}
+document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;const d=t.dataset;
+if(d.go)go(d.go);
+else if(d.pick){S=DB.cars.find(c=>c.id==d.pick);DB.cur=d.pick;save();show=false;go("home")}
+else if(d.rmcar){if(!t.dataset.arm){t.dataset.arm=1;t.textContent="Tap again to remove this car and its data";setTimeout(()=>{if(view=="garage"&&!$("#nn"))garage()},3500);return}DB.cars=DB.cars.filter(c=>c.id!=d.rmcar);if(S&&S.id==d.rmcar)S=null;save();toast("Car removed");garage()}
+else if("newcar"in d)newcar();
+else if("mkcar"in d){const n=$("#nn").value.trim(),m=+$("#nm").value,o=+$("#no").value,s=$("#ns").value||today();if(!n)return toast("Enter the car name");if(!(m>0))return toast("Enter the current meter");const c={id:"c"+Date.now(),name:n,since:s,fills:[{d:s,m,l:0,p:0}],oil:o>0?[{d:s,k:o}]:[]};DB.cars.push(c);DB.cur=c.id;S=c;save();toast("Car added");show=false;go("home")}
+else if("more"in d){show=!show;home()}
+else if(d.del!=null){if(!t.dataset.arm){t.dataset.arm=1;t.textContent="Tap again to delete";setTimeout(()=>home(),2500);return}if(S.fills.length>2){S.fills.splice(+d.del,1);save();toast("Deleted");home()}}
+else if(d.delo!=null){S.oil.splice(+d.delo,1);save();oil()}
+else if("oil"in d){const dt=$("#od").value,k=+$("#ok").value;if(!dt||!(k>0))return toast("Enter date and meter");S.oil.push({d:dt,k});save();toast("Oil change saved");oil()}
+else if("save"in d){const o={d:$("#fd").value,m:+$("#fm").value,l:+$("#fl").value,p:+$("#fp").value},{last}=info();
+if(!o.d||!(o.m>last.m))return toast("Meter must be above "+nf(last.m)+" km");if(!(o.l>0&&o.p>0))return toast("Enter litres and price");S.fills.push(o);save();toast("Fill-up saved");go("home")}
+else if("copy"in d){const a=$("#bk");a.select();try{document.execCommand("copy");toast("Copied")}catch(x){toast("Select and copy the text")}}
+else if("restore"in d){try{const j=JSON.parse($("#bk").value);if(!j.cars||!j.cars.length)throw 0;DB=j;S=DB.cars[0];save();toast("Restored");go("garage")}catch(x){toast("That backup is not valid")}}});
+setInterval(()=>{if(view=="age")tick()},1000);
+go("garage");
+if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script></body></html>
